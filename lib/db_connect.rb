@@ -1,6 +1,10 @@
 require "yaml"
 require "sequel"
 
+# Sequel extensions that monkeypatch core classes by adding convenience methods.
+Sequel.extension :core_extensions
+Sequel.extension :symbol_aref
+
 class DBConnect
   DEFAULT_YAML_FILE = "~/.secure/db_connections.yml"
 
