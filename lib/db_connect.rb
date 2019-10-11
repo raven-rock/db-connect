@@ -23,7 +23,19 @@ class DBConnect
   end
 
   def sequel(connection_name)
-    Sequel.connect(as_hash(connection_name))
+    db = Sequel.connect(as_hash(connection_name))
+
+    # HACK: If this MySQL, force default character set variables to latin1 to
+    # prevent "Illegal mix of collation errors". Surely there is a better way to
+    # handle this.
+    if as_hash(connection_name)[:adapter] =~ /^mysql/i
+      db.run "set character_set_client = latin1"
+      db.run "set character_set_connection = latin1"
+      db.run "set character_set_database = latin1"
+      db.run "set character_set_results = latin1"
+    end
+
+    db
   end
 
   # class method shortcut for DBConnect.new.sequel(connection_name)
