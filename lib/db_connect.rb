@@ -1,4 +1,5 @@
 require "yaml"
+require "active_support/core_ext/hash/keys" # deep_symbolize_keys
 require "sequel"
 
 # Sequel extensions that monkeypatch core classes by adding convenience methods.
@@ -15,7 +16,7 @@ class DBConnect
   end
 
   def connections
-    YAML.load_file(yaml_file)
+    YAML.load_file(yaml_file).deep_symbolize_keys
   end
 
   def as_hash(connection_name)
